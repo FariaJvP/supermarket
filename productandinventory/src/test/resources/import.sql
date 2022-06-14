@@ -1,0 +1,1 @@
+INSERT INTO tb_brand (brand_name) VALUES ('Coca-Cola'), ('Pepsi'), ('Kellogg''s'),('General Mills'),('Splendid Spoon'),('Mosaic Foods'),('Nestlé'),('Danone'),('Persil'),('Tide'),('Smucker''s'), ('PB2'), ('Dave''s Killer'),('The Hagen Group'),('White Pearl');
