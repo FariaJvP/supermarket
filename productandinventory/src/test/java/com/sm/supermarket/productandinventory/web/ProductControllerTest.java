@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -21,12 +22,12 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import java.math.BigDecimal;
 import java.net.URI;
 
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
 @SpringBootTest(classes = SupermarketApplication.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class ProductControllerTest {
@@ -39,22 +40,23 @@ class ProductControllerTest {
 
     private URI uri;
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
     @Value("${com.sm.supermarket.uri.productcontroller}")
     private String uriController;
 
     @Test
     @DisplayName("should return status 201 when receives a valid request")
     public void test1() throws Exception {
+
+        NewProductRequest newProductRequest = new NewProductRequest("Penne alla Vodka", 6L,
+                "Frozen meal, 286g, vegetarian and no added sugar." , new BigDecimal("15.00"), "0");
+
         uri = new URI(uriController);
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
                 .post(uri)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper
                         .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
-                        .writeValueAsString(new NewProductRequest()));
+                        .writeValueAsString(newProductRequest));
 
         mockMvc.perform(request)
                 .andDo(MockMvcResultHandlers.print())
