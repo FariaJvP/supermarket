@@ -48,7 +48,7 @@ class ProductControllerTest {
     public void test1() throws Exception {
 
         NewProductRequest newProductRequest = new NewProductRequest("Penne alla Vodka", 6L,
-                "Frozen meal, 286g, vegetarian and no added sugar." , new BigDecimal("15.00"), "0");
+                "Frozen meal, 286g, vegetarian and no added sugar." , new BigDecimal("15.00"), "UNIT");
 
         uri = new URI(uriController);
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
