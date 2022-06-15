@@ -3,6 +3,7 @@ package com.sm.supermarket.productandinventory.entities.product;
 import com.sm.supermarket.productandinventory.entities.brand.Brand;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 
 @Entity
@@ -14,12 +15,14 @@ public class Product {
     private Long id;
 
     @Column(name = "product_name", length = 100, nullable = false)
+    @NotBlank
     private String name;
 
     @ManyToOne @JoinColumn(name = "product_brand_id", referencedColumnName = "brand_id", foreignKey = @ForeignKey(name = "product_brand_id"), nullable = false)
     private Brand brand;
 
     @Column(name = "product_description", length = 200, nullable = false)
+    @NotBlank
     private String description;
 
     @Column(name = "product_price", columnDefinition = "DECIMAL(15,2) NOT NULL CHECK(product_price >= 0)")
