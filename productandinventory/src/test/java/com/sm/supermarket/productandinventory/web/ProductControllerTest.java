@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sm.supermarket.SupermarketApplication;
+import com.sm.supermarket.productandinventory.infrastructure.domainentitiesinterfacerepositories.brand.BrandNotFoundException;
 import com.sm.supermarket.productandinventory.web.dto.NewProductRequest;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,6 +23,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.math.BigDecimal;
 import java.net.URI;
@@ -64,4 +67,24 @@ class ProductControllerTest {
                 .andReturn();
 
     }
+
+     @Test
+     @DisplayName("should trows a resolved exception if the user send an invalid brand id")
+     public void test2() throws Exception {
+         NewProductRequest newProductRequest = new NewProductRequest("Penne alla Vodka", 32L,
+                 "Frozen meal, 286g, vegetarian and no added sugar." , new BigDecimal("15.00"), "UNIT");
+
+         uri = new URI(uriController);
+         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                 .post(uri)
+                 .contentType(MediaType.APPLICATION_JSON)
+                 .content(objectMapper
+                         .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
+                         .writeValueAsString(newProductRequest));
+
+         mockMvc.perform(request)
+                 .andDo(MockMvcResultHandlers.print())
+                 .andExpect(MockMvcResultMatchers.status().isNotFound())
+                 .andExpect(result -> Assertions.assertTrue(result.getResolvedException() instanceof BrandNotFoundException));
+     }
 }
