@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -23,8 +24,8 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
+import javax.validation.ConstraintViolationException;
 import java.math.BigDecimal;
 import java.net.URI;
 
@@ -69,7 +70,7 @@ class ProductControllerTest {
     }
 
      @Test
-     @DisplayName("should trows a resolved exception if the user send an invalid brand id")
+     @DisplayName("should throws a resolved exception if the user send an invalid brand id")
      public void test2() throws Exception {
          NewProductRequest newProductRequest = new NewProductRequest("Penne alla Vodka", 32L,
                  "Frozen meal, 286g, vegetarian and no added sugar." , new BigDecimal("15.00"), "UNIT");
@@ -87,4 +88,111 @@ class ProductControllerTest {
                  .andExpect(MockMvcResultMatchers.status().isNotFound())
                  .andExpect(result -> Assertions.assertTrue(result.getResolvedException() instanceof BrandNotFoundException));
      }
+
+    @Test
+    @DisplayName("should throws a resolved exception if the user send an invalid name which causes a database constraint violation")
+    public void test3() throws Exception {
+
+        NewProductRequest newProductRequest = new NewProductRequest(" ", 6L,
+                "Frozen meal, 286g, vegetarian and no added sugar." , new BigDecimal("15.00"), "UNIT");
+
+        uri = new URI(uriController);
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .post(uri)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper
+                        .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
+                        .writeValueAsString(newProductRequest));
+
+        mockMvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(result -> Assertions.assertTrue(result.getResolvedException() instanceof ConstraintViolationException));
+    }
+
+    @Test
+    @DisplayName("should throws a resolved exception if the user send an invalid description which causes a database constraint violation")
+    public void test4() throws Exception {
+        NewProductRequest newProductRequest = new NewProductRequest("Penne alla Vodka", 6L,
+                " " , new BigDecimal("15.00"), "UNIT");
+
+        uri = new URI(uriController);
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .post(uri)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper
+                        .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
+                        .writeValueAsString(newProductRequest));
+
+        mockMvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(result -> Assertions.assertTrue(result.getResolvedException() instanceof ConstraintViolationException));
+    }
+
+    @Test
+    @DisplayName("should throws a resolved exception if the user send an invalid price value which causes a database constraint violation")
+    public void test5() throws Exception {
+        String json = "{\"name\":\"Penne alla Vodka\", \"brandId\":6, \"description\":\"Frozen meal, 286g, vegetarian and no added sugar.\", \"price\":\"  \", \"unit\":\"UNIT\"}";
+
+        uri = new URI(uriController);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post(uri)
+                        .content(json)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(result -> Assertions.assertTrue(result.getResolvedException() instanceof DataIntegrityViolationException));
+    }
+
+    @Test
+    @DisplayName("should throws a resolved exception if the user send a negative price value which causes a database constraint violation")
+    public void test6() throws Exception {
+        String json = "{\"name\":\"Penne alla Vodka\", \"brandId\":6, \"description\":\"Frozen meal, 286g, vegetarian and no added sugar.\", \"price\":\"-15.00\", \"unit\":\"UNIT\"}";
+
+        uri = new URI(uriController);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post(uri)
+                        .content(json)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(result -> Assertions.assertTrue(result.getResolvedException() instanceof DataIntegrityViolationException));
+    }
+
+    @Test
+    @DisplayName("should throws a resolved exception if the user send a request with a value that be the last negative boundary of price value which causes a database constraint violation")
+    public void test7() throws Exception {
+        String json = "{\"name\":\"Penne alla Vodka\", \"brandId\":6, \"description\":\"Frozen meal, 286g, vegetarian and no added sugar.\", \"price\":\"-0.01\", \"unit\":\"UNIT\"}";
+
+        uri = new URI(uriController);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post(uri)
+                        .content(json)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(result -> Assertions.assertTrue(result.getResolvedException() instanceof DataIntegrityViolationException));
+    }
+
+    @Test
+    @DisplayName("should throws a resolved exception if the user send an invalid unit value which causes a database constraint violation")
+    public void test8() throws Exception {
+        NewProductRequest newProductRequest = new NewProductRequest("Penne alla Vodka", 6L,
+                "Frozen meal, 286g, vegetarian and no added sugar." , new BigDecimal("15.00"), " ");
+
+        uri = new URI(uriController);
+
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .post(uri)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper
+                        .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
+                        .writeValueAsString(newProductRequest));
+
+        mockMvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(result -> Assertions.assertTrue(result.getResolvedException() instanceof IllegalArgumentException));
+    }
 }
