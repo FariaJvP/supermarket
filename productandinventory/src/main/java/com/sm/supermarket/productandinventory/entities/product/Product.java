@@ -16,7 +16,7 @@ public class Product {
     @Column(name = "product_name", length = 100, nullable = false)
     private String name;
 
-    @ManyToOne @JoinColumn(name = "brand_id", referencedColumnName = "brand_id", nullable = false)
+    @ManyToOne @JoinColumn(name = "product_brand_id", referencedColumnName = "brand_id", foreignKey = @ForeignKey(name = "product_brand_id"), nullable = false)
     private Brand brand;
 
     @Column(name = "product_description", length = 200, nullable = false)
