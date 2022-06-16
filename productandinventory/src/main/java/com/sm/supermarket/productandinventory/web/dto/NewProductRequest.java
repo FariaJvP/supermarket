@@ -1,17 +1,26 @@
 package com.sm.supermarket.productandinventory.web.dto;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
 
 public class NewProductRequest {
 
+    @NotBlank(message = "name must not be blank")
     private String name;
 
+    @NotNull(message = "brand id must not be null")
     private Long brandId;
 
+    @NotBlank(message = "description must not be blank")
     private String description;
 
+    @NotNull(message = "price must not be null")
+    @PositiveOrZero(message = "price can not be negative")
     private BigDecimal price;
 
+    @NotBlank(message = "unit must not be blank")
     private String unit;
 
     public NewProductRequest(String name, Long brandId, String description, BigDecimal price, String unit) {
