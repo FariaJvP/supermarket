@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sm.supermarket.SupermarketApplication;
 import com.sm.supermarket.productandinventory.infrastructure.domainentitiesinterfacerepositories.brand.BrandNotFoundException;
+import com.sm.supermarket.productandinventory.usecases.CreatedProduct;
 import com.sm.supermarket.productandinventory.web.dto.NewProductRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -47,6 +48,9 @@ class ProductControllerTest {
 
     @Value("${com.sm.supermarket.uri.productcontroller}")
     private String uriController;
+
+    @Autowired
+    CreatedProduct createdProduct;
 
     @Test
     @DisplayName("should return status 201 when receives a valid request")
@@ -91,7 +95,7 @@ class ProductControllerTest {
      }
 
     @Test
-    @DisplayName("should throws a resolved exception if the user send an invalid name which causes a database constraint violation")
+    @DisplayName("should throws a resolved exception if the user send an invalid name which causes a MethodArgumentNotValidExption")
     public void test3() throws Exception {
 
         NewProductRequest newProductRequest = new NewProductRequest(" ", 6L,
@@ -112,7 +116,7 @@ class ProductControllerTest {
     }
 
     @Test
-    @DisplayName("should throws a resolved exception if the user send an invalid description which causes a database constraint violation")
+    @DisplayName("should throws a resolved exception if the user send an invalid description which causes a MethodArgumentNotValidExption")
     public void test4() throws Exception {
         NewProductRequest newProductRequest = new NewProductRequest("Penne alla Vodka", 6L,
                 " " , new BigDecimal("15.00"), "UNIT");
@@ -132,7 +136,7 @@ class ProductControllerTest {
     }
 
     @Test
-    @DisplayName("should throws a resolved exception if the user send an invalid price value which causes a database constraint violation")
+    @DisplayName("should throws a resolved exception if the user send an invalid price value which causes a MethodArgumentNotValidExption")
     public void test5() throws Exception {
         String json = "{\"name\":\"Penne alla Vodka\", \"brandId\":6, \"description\":\"Frozen meal, 286g, vegetarian and no added sugar.\", \"price\":\"  \", \"unit\":\"UNIT\"}";
 
@@ -147,7 +151,7 @@ class ProductControllerTest {
     }
 
     @Test
-    @DisplayName("should throws a resolved exception if the user send a negative price value which causes a database constraint violation")
+    @DisplayName("should throws a resolved exception if the user send a negative price value which causes a MethodArgumentNotValidExption")
     public void test6() throws Exception {
         String json = "{\"name\":\"Penne alla Vodka\", \"brandId\":6, \"description\":\"Frozen meal, 286g, vegetarian and no added sugar.\", \"price\":\"-15.00\", \"unit\":\"UNIT\"}";
 
@@ -195,5 +199,41 @@ class ProductControllerTest {
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(result -> Assertions.assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException)).andReturn();
+    }
+
+    @Test
+    @DisplayName("should throws a resolved exception if the user send an invalid name which causes a database constraint violation")
+    public void test9(){
+        NewProductRequest newProductRequest = new NewProductRequest(" ", 6L,
+                "Frozen meal, 286g, vegetarian and no added sugar." , new BigDecimal("15.00"), "UNIT");
+
+        Assertions.assertThrows(ConstraintViolationException.class, () -> createdProduct.execute(newProductRequest));
+    }
+
+    @Test
+    @DisplayName("should throws a resolved exception if the user send an invalid description which causes a database constraint violation")
+    public void test10(){
+        NewProductRequest newProductRequest = new NewProductRequest("Penne alla Vodka", 6L,
+                " " , new BigDecimal("15.00"), "UNIT");
+
+        Assertions.assertThrows(ConstraintViolationException.class, () -> createdProduct.execute(newProductRequest));
+    }
+
+    @Test
+    @DisplayName("should throws a resolved exception if the user send an invalid price value which causes a data integrity violation in database")
+    public void test11(){
+        NewProductRequest newProductRequest = new NewProductRequest("Penne alla Vodka", 6L,
+                "Frozen meal, 286g, vegetarian and no added sugar." , new BigDecimal("-15.00"), "UNIT");
+
+        Assertions.assertThrows(DataIntegrityViolationException.class, () -> createdProduct.execute(newProductRequest));
+    }
+
+    @Test
+    @DisplayName("should throws a resolved exception if the user send a request with a value that be the last negative boundary of price value causes a data integrity violation in database")
+    public void test12(){
+        NewProductRequest newProductRequest = new NewProductRequest("Penne alla Vodka", 6L,
+                "Frozen meal, 286g, vegetarian and no added sugar." , new BigDecimal("-0.01"), "UNIT");
+
+        Assertions.assertThrows(DataIntegrityViolationException.class, () -> createdProduct.execute(newProductRequest));
     }
 }
