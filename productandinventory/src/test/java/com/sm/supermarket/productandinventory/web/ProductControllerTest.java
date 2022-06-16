@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sm.supermarket.SupermarketApplication;
-import com.sm.supermarket.productandinventory.infrastructure.domainentitiesinterfacerepositories.brand.BrandNotFoundException;
 import com.sm.supermarket.productandinventory.usecases.CreatedProduct;
 import com.sm.supermarket.productandinventory.web.dto.NewProductRequest;
 import org.junit.jupiter.api.Assertions;
@@ -90,8 +89,8 @@ class ProductControllerTest {
 
          mockMvc.perform(request)
                  .andDo(MockMvcResultHandlers.print())
-                 .andExpect(MockMvcResultMatchers.status().isNotFound())
-                 .andExpect(result -> Assertions.assertTrue(result.getResolvedException() instanceof BrandNotFoundException));
+                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                 .andExpect(result -> Assertions.assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException));
      }
 
     @Test
