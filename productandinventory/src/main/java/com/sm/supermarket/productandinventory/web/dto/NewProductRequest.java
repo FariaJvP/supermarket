@@ -1,5 +1,8 @@
 package com.sm.supermarket.productandinventory.web.dto;
 
+import com.sm.supermarket.productandinventory.entities.brand.Brand;
+import com.sm.supermarket.productandinventory.web.validation.ValidBrand;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
@@ -11,6 +14,7 @@ public class NewProductRequest {
     private String name;
 
     @NotNull(message = "brand id must not be null")
+    @ValidBrand(fieldName = "id", domainClass = Brand.class)
     private Long brandId;
 
     @NotBlank(message = "description must not be blank")
