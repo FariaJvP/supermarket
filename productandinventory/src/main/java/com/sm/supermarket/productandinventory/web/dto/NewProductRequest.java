@@ -7,11 +7,13 @@ import com.sm.supermarket.productandinventory.web.validation.ValidPackageUnit;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 
 public class NewProductRequest {
 
     @NotBlank(message = "name must not be blank")
+    @Size(max = 100)
     private String name;
 
     @NotNull(message = "brand id must not be null")
@@ -19,6 +21,7 @@ public class NewProductRequest {
     private Long brandId;
 
     @NotBlank(message = "description must not be blank")
+    @Size(max = 200)
     private String description;
 
     @NotNull(message = "price must not be null")
