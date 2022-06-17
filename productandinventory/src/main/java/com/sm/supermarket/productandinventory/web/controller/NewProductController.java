@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping(value = "${com.sm.supermarket.uri.productcontroller}")
+@RequestMapping(value = "${com.sm.supermarket.uri.newproduct}")
 public class NewProductController {
 
     @Autowired

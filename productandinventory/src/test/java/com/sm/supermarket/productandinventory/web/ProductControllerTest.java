@@ -45,7 +45,7 @@ class ProductControllerTest {
 
     private URI uri;
 
-    @Value("${com.sm.supermarket.uri.productcontroller}")
+    @Value("${com.sm.supermarket.uri.newproduct}")
     private String uriController;
 
     @Autowired
