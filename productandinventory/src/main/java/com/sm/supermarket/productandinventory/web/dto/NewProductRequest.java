@@ -2,6 +2,7 @@ package com.sm.supermarket.productandinventory.web.dto;
 
 import com.sm.supermarket.productandinventory.entities.brand.Brand;
 import com.sm.supermarket.productandinventory.web.validation.ValidBrand;
+import com.sm.supermarket.productandinventory.web.validation.ValidPackageUnit;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -25,6 +26,7 @@ public class NewProductRequest {
     private BigDecimal price;
 
     @NotBlank(message = "unit must not be blank")
+    @ValidPackageUnit
     private String unit;
 
     public NewProductRequest(String name, Long brandId, String description, BigDecimal price, String unit) {
