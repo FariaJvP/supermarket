@@ -1,4 +1,4 @@
-package com.sm.supermarket.productandinventory.usecases;
+package com.sm.supermarket.productandinventory.usecases.product.newproduct;
 
 import com.sm.supermarket.productandinventory.entities.brand.Brand;
 import com.sm.supermarket.productandinventory.entities.brand.EntityRepositoryForBrand;

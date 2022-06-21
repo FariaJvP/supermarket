@@ -4,4 +4,5 @@ public interface EntityRepositoryForProduct {
 
     void sendToDatabase(Product product);
 
+    Product findById(long productId);
 }

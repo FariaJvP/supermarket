@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sm.supermarket.SupermarketApplication;
-import com.sm.supermarket.productandinventory.usecases.CreatedProduct;
+import com.sm.supermarket.productandinventory.usecases.product.newproduct.CreatedProduct;
 import com.sm.supermarket.productandinventory.web.dto.NewProductRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

@@ -1,6 +1,6 @@
 package com.sm.supermarket.productandinventory.web.controller;
 
-import com.sm.supermarket.productandinventory.usecases.CreatedProduct;
+import com.sm.supermarket.productandinventory.usecases.product.newproduct.CreatedProduct;
 import com.sm.supermarket.productandinventory.web.dto.NewProductRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
