@@ -10,7 +10,7 @@ import java.math.BigInteger;
 public class ProductToBeOrdered {
 
     @EmbeddedId
-    private CompositePurchaseRequisitionAndProduct productForPurchaseRequisition;
+    private CompositePurchaseRequisitionAndProduct id;
 
     private BigInteger quantity;
 
@@ -20,7 +20,7 @@ public class ProductToBeOrdered {
     }
 
     public ProductToBeOrdered(CompositePurchaseRequisitionAndProduct productForPurchaseRequisition, BigInteger quantityToBeOrdered) {
-        this.productForPurchaseRequisition = productForPurchaseRequisition;
+        this.id = productForPurchaseRequisition;
         this.quantity = quantityToBeOrdered;
     }
 }

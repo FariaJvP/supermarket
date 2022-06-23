@@ -3,6 +3,7 @@ package com.sm.supermarket.productandinventory.entities.inventory.purchaserequis
 import com.sm.supermarket.productandinventory.entities.product.Product;
 
 import javax.persistence.Embeddable;
+import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import java.io.Serializable;
@@ -12,7 +13,7 @@ import java.util.Objects;
 public class CompositePurchaseRequisitionAndProduct implements Serializable {
 
     @OneToOne
-    @JoinColumn(name = "purchase_requisition_id")
+    @JoinColumn(name = "purchase_requisition_id", referencedColumnName = "id", foreignKey = @ForeignKey  (name = "purchase_requisition_id"))
     private PurchaseRequisition purchaseRequisition;
 
     @OneToOne

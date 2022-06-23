@@ -11,25 +11,25 @@ import java.math.BigDecimal;
 public class Product {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "product_id")
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "product_name", length = 100, nullable = false)
     @NotBlank
     private String name;
 
-    @ManyToOne @JoinColumn(name = "product_brand_id", referencedColumnName = "brand_id", foreignKey = @ForeignKey(name = "product_brand_id"), nullable = false)
+    @ManyToOne @JoinColumn(name = "brand_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "brand_id"), nullable = false)
     private Brand brand;
 
     @Column(name = "product_description", length = 200, nullable = false)
     @NotBlank
     private String description;
 
-    @Column(name = "product_price", columnDefinition = "DECIMAL(15,2) NOT NULL CHECK(product_price >= 0)")
+    @Column(name = "price", columnDefinition = "DECIMAL(15,2) NOT NULL CHECK(price >= 0)")
     private BigDecimal price;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "product_unit", length = 4, nullable = false)
+    @Column(name = "unit", length = 4, nullable = false)
     private PackageUnit unit;
 
     @Deprecated
