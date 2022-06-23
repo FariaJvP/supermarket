@@ -1,21 +1,26 @@
 package com.sm.supermarket.productandinventory.entities.inventory.purchaserequisition;
 
-import com.sm.supermarket.productandinventory.entities.product.Product;
-
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.math.BigInteger;
 
+@Entity
+@Table(name = "tb_product_to_be_ordered")
 public class ProductToBeOrdered {
 
-    private long id;
-
-    private PurchaseRequisition purchaseRequisition;
-
-    private Product product;
+    @EmbeddedId
+    private CompositePurchaseRequisitionAndProduct productForPurchaseRequisition;
 
     private BigInteger quantity;
 
-    public ProductToBeOrdered(Product product, BigInteger quantityToBeOrdered) {
-        this.product = product;
+    @Deprecated
+    public ProductToBeOrdered(){
+
+    }
+
+    public ProductToBeOrdered(CompositePurchaseRequisitionAndProduct productForPurchaseRequisition, BigInteger quantityToBeOrdered) {
+        this.productForPurchaseRequisition = productForPurchaseRequisition;
         this.quantity = quantityToBeOrdered;
     }
 }
