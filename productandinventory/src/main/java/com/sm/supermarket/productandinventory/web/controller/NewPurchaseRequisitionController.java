@@ -11,18 +11,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
-@RequestMapping(value = "${com.sm.supermarket.uri.newpurchaserequisition}")
+@RequestMapping(value = "${com.sm.supermarket.uri.purchaserequisition.new}")
 public class NewPurchaseRequisitionController {
 
+    private final CreatePurchaseRequisition newPurchaseRequisition;
+
     @Autowired
-    public CreatePurchaseRequisition newPurchaseRequisition;
+    public NewPurchaseRequisitionController(CreatePurchaseRequisition newPurchaseRequisition){
+        this.newPurchaseRequisition = newPurchaseRequisition;
+    }
 
     @PostMapping
-    public ResponseEntity<?> sendNewPurchaseRequisition(@RequestBody @Valid List<PurchaseRequisitionRequest> request){
-        newPurchaseRequisition.execute(request);
+    public ResponseEntity<?> sendNewPurchaseRequisition(@RequestBody @Valid PurchaseRequisitionRequest request){
+        newPurchaseRequisition.execute(request.convertIntoPurchaseRequisitionForm());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

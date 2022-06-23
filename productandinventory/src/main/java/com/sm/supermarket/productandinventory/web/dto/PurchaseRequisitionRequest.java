@@ -1,25 +1,24 @@
 package com.sm.supermarket.productandinventory.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.sm.supermarket.productandinventory.usecases.inventory.purchaserequisition.PurchaseRequisitionForm;
 
-import java.math.BigInteger;
+import java.time.LocalDateTime;
+import java.util.List;
 
 public class PurchaseRequisitionRequest {
 
-    @JsonProperty private long productId;
+    @JsonProperty private final List<ProductToBeOrderedRequisition> listOfProductsToBeOrdered;
 
-    @JsonProperty private BigInteger quantity;
+    private final LocalDateTime dateTime;
 
-    public PurchaseRequisitionRequest(long productId, BigInteger quantity){
-        this.productId = productId;
-        this.quantity = quantity;
+
+    public PurchaseRequisitionRequest(List<ProductToBeOrderedRequisition> products) {
+        this.listOfProductsToBeOrdered = products;
+        this.dateTime = LocalDateTime.now();
     }
 
-    public long getProductId() {
-        return this.productId;
-    }
-
-    public BigInteger getQuantityToBeOrdered() {
-        return this.quantity;
+    public PurchaseRequisitionForm convertIntoPurchaseRequisitionForm() {
+        return new PurchaseRequisitionForm(listOfProductsToBeOrdered, dateTime);
     }
 }
