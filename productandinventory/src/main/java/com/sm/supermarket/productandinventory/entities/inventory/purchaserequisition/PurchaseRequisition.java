@@ -1,17 +1,24 @@
 package com.sm.supermarket.productandinventory.entities.inventory.purchaserequisition;
 
-import java.util.Set;
+import javax.persistence.*;
 
+@Entity
+@Table(name = "tb_purchase_requisition")
 public class PurchaseRequisition {
 
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private Set<ProductToBeOrdered> listOfProducts;
-
+    @Enumerated(EnumType.STRING)
+    @Column(name = "process_status", nullable = false)
     private PurchaseRequisitionProcessStatus status;
 
-    public PurchaseRequisition(PurchaseRequisitionProcessStatus status, Set<ProductToBeOrdered> listOfProductsToBeOrdered) {
-        this.listOfProducts = listOfProductsToBeOrdered;
+    @Deprecated
+    public PurchaseRequisition(){
+
+    }
+
+    public PurchaseRequisition(PurchaseRequisitionProcessStatus status) {
         this.status = status;
     }
 }
