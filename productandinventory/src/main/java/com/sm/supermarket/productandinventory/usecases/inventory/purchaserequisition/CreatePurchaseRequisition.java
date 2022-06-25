@@ -1,13 +1,13 @@
 package com.sm.supermarket.productandinventory.usecases.inventory.purchaserequisition;
 
 import com.sm.supermarket.productandinventory.entities.inventory.purchaserequisition.*;
+import com.sm.supermarket.productandinventory.entities.inventory.purchaserequisition.history.PurchaseRequisitionHistory;
+import com.sm.supermarket.productandinventory.entities.inventory.purchaserequisition.history.PurchaseRequisitionHistoryStatusUpdate;
 import com.sm.supermarket.productandinventory.entities.product.EntityRepositoryForProduct;
 import com.sm.supermarket.productandinventory.entities.product.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.transaction.Transactional;
-import javax.transaction.TransactionalException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,33 +18,42 @@ public class CreatePurchaseRequisition {
 
     private final EntityRepositoryForPurchaseRequisition purchaseRequisitionRepository;
 
-    private final GeneratePurchaseRequisitionHistory purchaseRequisitionHistory;
+    private final EntityRepositoryForProductsToBeOrdered productsToBeOrderedRepository;
+
+    private PurchaseRequisitionHistory purchaseRequisitionHistory;
+
+    private final GeneratePurchaseRequisitionHistory generatePurchaseRequisitionHistory;
 
     private PurchaseRequisition purchaseRequisition;
 
-    private Set<ProductToBeOrdered> listOfProductsToBeOrdered;
+    private final Set<ProductToBeOrdered> listOfProductsToBeOrdered;
 
-    private final PurchaseRequisitionForm requisition;
+    private PurchaseRequisitionForm purchaseRequisitionForm;
 
     @Autowired
     public CreatePurchaseRequisition(EntityRepositoryForProduct productRepository, EntityRepositoryForPurchaseRequisition purchaseRequisitionRepository,
-                                     GeneratePurchaseRequisitionHistory purchaseRequisitionHistory , PurchaseRequisitionForm purchaseRequisitionForm){
+                                     EntityRepositoryForProductsToBeOrdered productsToBeOrderedRepository,
+                                     GeneratePurchaseRequisitionHistory generatePurchaseRequisitionHistory){
         this.productRepository = productRepository;
         this.purchaseRequisitionRepository = purchaseRequisitionRepository;
-        this.purchaseRequisitionHistory = purchaseRequisitionHistory;
-        this.requisition = purchaseRequisitionForm;
+        this.productsToBeOrderedRepository = productsToBeOrderedRepository;
+        this.generatePurchaseRequisitionHistory = generatePurchaseRequisitionHistory;
+        this.listOfProductsToBeOrdered = new HashSet<>();
     }
 
     public void execute(PurchaseRequisitionForm requisition) {
-        fillTheListOfProductsToBeOrderedWithWhatCameInRequisition();
+        getPurchaseRequisitionForm(requisition);
         generateNewPurchaseRequisition();
+        fillTheListOfProductsToBeOrderedWithWhatCameInRequisition(requisition);
         transactPurchaseRequisitionWithHistory();
     }
 
-    private void fillTheListOfProductsToBeOrderedWithWhatCameInRequisition() {
-        this.listOfProductsToBeOrdered = new HashSet<>();
+    private void getPurchaseRequisitionForm(PurchaseRequisitionForm requisition) {
+        this.purchaseRequisitionForm = requisition;
+    }
 
-        this.requisition.getListOfProductsToBeOrdered().forEach(productInList ->{
+    private void fillTheListOfProductsToBeOrderedWithWhatCameInRequisition(PurchaseRequisitionForm requisition) {
+        requisition.getListOfProductsToBeOrdered().forEach(productInList ->{
             Product product = productRepository.findById(productInList.getProductId());
             listOfProductsToBeOrdered.add(new ProductToBeOrdered(new CompositePurchaseRequisitionAndProduct(purchaseRequisition, product), productInList.getQuantity()));
         });
@@ -54,14 +63,14 @@ public class CreatePurchaseRequisition {
         this.purchaseRequisition = new PurchaseRequisition(PurchaseRequisitionProcessStatus.WAITING_HISTORY_STATUS_UPDATE);
     }
 
-    @Transactional
-    private void transactPurchaseRequisitionWithHistory() {
-        try {
-            sendPurchaseRequisitionToDatabase();
-            generateHistory();
-        }catch (TransactionalException exception){
-            exception.getMessage();
-        }
+    public void transactPurchaseRequisitionWithHistory() {
+        sendPurchaseRequisitionToDatabase();
+        sentoProductsToBeOrderedToDatabase();
+        generateHistory();
+    }
+
+    private void sentoProductsToBeOrderedToDatabase() {
+        this.productsToBeOrderedRepository.sendToDatabase(listOfProductsToBeOrdered);
     }
 
     private void sendPurchaseRequisitionToDatabase() {
@@ -69,6 +78,9 @@ public class CreatePurchaseRequisition {
     }
 
     private void generateHistory() {
-        purchaseRequisitionHistory.execute(purchaseRequisition, requisition.getDateTime());
+        this.purchaseRequisitionHistory = new PurchaseRequisitionHistory(purchaseRequisition,
+                PurchaseRequisitionHistoryStatusUpdate.PENDING, purchaseRequisitionForm.getDateTime());
+
+        generatePurchaseRequisitionHistory.execute(purchaseRequisitionHistory);
     }
 }
