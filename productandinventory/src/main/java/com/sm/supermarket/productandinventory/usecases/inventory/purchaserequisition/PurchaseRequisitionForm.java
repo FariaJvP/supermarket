@@ -4,12 +4,12 @@ import com.sm.supermarket.productandinventory.web.dto.ProductToBeOrderedRequisit
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 
 @Component
 public class PurchaseRequisitionForm {
 
-    private List<ProductToBeOrderedRequisition> listOfProductsToBeOrdered;
+    private Set<ProductToBeOrderedRequisition> listOfProductsToBeOrdered;
 
     private LocalDateTime dateTime;
 
@@ -18,12 +18,12 @@ public class PurchaseRequisitionForm {
 
     }
 
-    public PurchaseRequisitionForm(List<ProductToBeOrderedRequisition> listOfProductsToBeOrdered, LocalDateTime dateTime) {
+    public PurchaseRequisitionForm(Set<ProductToBeOrderedRequisition> listOfProductsToBeOrdered, LocalDateTime dateTime) {
         this.listOfProductsToBeOrdered = listOfProductsToBeOrdered;
         this.dateTime = dateTime;
     }
 
-    public List<ProductToBeOrderedRequisition> getListOfProductsToBeOrdered() {
+    public Set<ProductToBeOrderedRequisition> getListOfProductsToBeOrdered() {
         return listOfProductsToBeOrdered;
     }
 
