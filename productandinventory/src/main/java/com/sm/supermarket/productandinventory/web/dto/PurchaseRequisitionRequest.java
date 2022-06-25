@@ -1,19 +1,20 @@
 package com.sm.supermarket.productandinventory.web.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sm.supermarket.productandinventory.usecases.inventory.purchaserequisition.PurchaseRequisitionForm;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 
 public class PurchaseRequisitionRequest {
 
-    @JsonProperty private final List<ProductToBeOrderedRequisition> listOfProductsToBeOrdered;
+    private Set<ProductToBeOrderedRequisition> listOfProductsToBeOrdered;
 
-    private final LocalDateTime dateTime;
+    private  LocalDateTime dateTime;
 
+    @Deprecated
+    public PurchaseRequisitionRequest (){ }
 
-    public PurchaseRequisitionRequest(List<ProductToBeOrderedRequisition> products) {
+    public PurchaseRequisitionRequest(Set<ProductToBeOrderedRequisition> products) {
         this.listOfProductsToBeOrdered = products;
         this.dateTime = LocalDateTime.now();
     }
