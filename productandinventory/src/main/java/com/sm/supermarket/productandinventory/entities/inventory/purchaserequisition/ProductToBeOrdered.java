@@ -1,5 +1,6 @@
 package com.sm.supermarket.productandinventory.entities.inventory.purchaserequisition;
 
+import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -12,6 +13,7 @@ public class ProductToBeOrdered {
     @EmbeddedId
     private CompositePurchaseRequisitionAndProduct id;
 
+    @Column(columnDefinition = "BIGINT UNSIGNED NOT NULL CHECK(quantity >= 0)")
     private BigInteger quantity;
 
     @Deprecated
