@@ -28,6 +28,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -94,8 +95,33 @@ class NewPurchaseRequisitionControllerTest {
     }
 
     @Test
-    @DisplayName("should throws exception if the client send a negative value for a product to be ordered")
+    @DisplayName("should return a resolved exception when the client sends an invalid value for product quantity")
     public void test2() throws Exception {
+
+        Set<ProductToBeOrderedRequisition> listOfProductsToBeOrdered = new HashSet<>();
+        listOfProductsToBeOrdered.add(new ProductToBeOrderedRequisition(1 , BigInteger.valueOf(-1000000)));
+        listOfProductsToBeOrdered.add(new ProductToBeOrderedRequisition(2 , BigInteger.valueOf(400)));
+        listOfProductsToBeOrdered.add(new ProductToBeOrderedRequisition(3 , BigInteger.valueOf(100)));
+
+        PurchaseRequisitionRequest newPurchaseOrderRequest = new PurchaseRequisitionRequest(listOfProductsToBeOrdered);
+
+        uri = new URI(uriController);
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .post(uri)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper
+                        .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
+                        .writeValueAsString(newPurchaseOrderRequest));
+
+        mockMvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(result -> Assertions.assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException)).andReturn();
+    }
+
+    @Test
+    @DisplayName("should throws exception if the client send a negative value for a product to be ordered")
+    public void test3() throws Exception {
 
         Set<ProductToBeOrderedRequisition> listOfProductsToBeOrdered = new HashSet<>();
         listOfProductsToBeOrdered.add(new ProductToBeOrderedRequisition(1 , BigInteger.valueOf(-1000000)));
@@ -111,7 +137,7 @@ class NewPurchaseRequisitionControllerTest {
 
     @Test
     @DisplayName("should throws exception if the client send 0 as value for a product to be ordered")
-    public void test3() throws Exception {
+    public void test4() throws Exception {
 
         Set<ProductToBeOrderedRequisition> listOfProductsToBeOrdered = new HashSet<>();
         listOfProductsToBeOrdered.add(new ProductToBeOrderedRequisition(1 , BigInteger.valueOf(0)));
@@ -127,7 +153,7 @@ class NewPurchaseRequisitionControllerTest {
 
     @Test
     @DisplayName("should throws exception if the client send an invalid product id")
-    public void test4() throws Exception {
+    public void test5() throws Exception {
 
         Set<ProductToBeOrderedRequisition> listOfProductsToBeOrdered = new HashSet<>();
         listOfProductsToBeOrdered.add(new ProductToBeOrderedRequisition(55 , BigInteger.valueOf(1000000)));
