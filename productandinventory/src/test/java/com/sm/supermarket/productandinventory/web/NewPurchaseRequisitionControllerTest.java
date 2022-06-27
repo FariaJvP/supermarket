@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sm.supermarket.SupermarketApplication;
 import com.sm.supermarket.productandinventory.entities.inventory.purchaserequisition.ProductToBeOrdered;
+import com.sm.supermarket.productandinventory.infrastructure.domainentitiesinterfacerepositories.product.ProductNotFoundException;
+import com.sm.supermarket.productandinventory.usecases.inventory.purchaserequisition.CreatePurchaseRequisition;
+import com.sm.supermarket.productandinventory.usecases.inventory.purchaserequisition.PurchaseRequisitionForm;
 import com.sm.supermarket.productandinventory.web.dto.ProductToBeOrderedRequisition;
 import com.sm.supermarket.productandinventory.web.dto.PurchaseRequisitionRequest;
 import org.junit.jupiter.api.Assertions;
@@ -15,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -55,6 +59,9 @@ class NewPurchaseRequisitionControllerTest {
     @Value("${com.sm.supermarket.uri.purchaserequisition.new}")
     private String uriController;
 
+    @Autowired
+    private CreatePurchaseRequisition createPurchaseRequisition;
+
     @Test
     @DisplayName("should return status 201 when receives a valid request")
     public void test1() throws Exception {
@@ -85,4 +92,53 @@ class NewPurchaseRequisitionControllerTest {
         Assertions.assertNotNull(resultList);
         Assertions.assertEquals(3, resultList.size());
     }
+
+    @Test
+    @DisplayName("should throws exception if the client send a negative value for a product to be ordered")
+    public void test2() throws Exception {
+
+        Set<ProductToBeOrderedRequisition> listOfProductsToBeOrdered = new HashSet<>();
+        listOfProductsToBeOrdered.add(new ProductToBeOrderedRequisition(1 , BigInteger.valueOf(-1000000)));
+        listOfProductsToBeOrdered.add(new ProductToBeOrderedRequisition(2 , BigInteger.valueOf(400)));
+        listOfProductsToBeOrdered.add(new ProductToBeOrderedRequisition(3 , BigInteger.valueOf(100)));
+
+        PurchaseRequisitionRequest newPurchaseOrderRequest = new PurchaseRequisitionRequest(listOfProductsToBeOrdered);
+        PurchaseRequisitionForm purchaseRequisitionForm = newPurchaseOrderRequest.convertIntoPurchaseRequisitionForm();
+
+        Assertions.assertThrows(DataIntegrityViolationException.class, () -> createPurchaseRequisition.execute(purchaseRequisitionForm));
+
+    }
+
+    @Test
+    @DisplayName("should throws exception if the client send 0 as value for a product to be ordered")
+    public void test3() throws Exception {
+
+        Set<ProductToBeOrderedRequisition> listOfProductsToBeOrdered = new HashSet<>();
+        listOfProductsToBeOrdered.add(new ProductToBeOrderedRequisition(1 , BigInteger.valueOf(0)));
+        listOfProductsToBeOrdered.add(new ProductToBeOrderedRequisition(2 , BigInteger.valueOf(400)));
+        listOfProductsToBeOrdered.add(new ProductToBeOrderedRequisition(3 , BigInteger.valueOf(100)));
+
+        PurchaseRequisitionRequest newPurchaseOrderRequest = new PurchaseRequisitionRequest(listOfProductsToBeOrdered);
+        PurchaseRequisitionForm purchaseRequisitionForm = newPurchaseOrderRequest.convertIntoPurchaseRequisitionForm();
+
+        Assertions.assertThrows(DataIntegrityViolationException.class, () -> createPurchaseRequisition.execute(purchaseRequisitionForm));
+
+    }
+
+    @Test
+    @DisplayName("should throws exception if the client send an invalid product id")
+    public void test4() throws Exception {
+
+        Set<ProductToBeOrderedRequisition> listOfProductsToBeOrdered = new HashSet<>();
+        listOfProductsToBeOrdered.add(new ProductToBeOrderedRequisition(55 , BigInteger.valueOf(1000000)));
+        listOfProductsToBeOrdered.add(new ProductToBeOrderedRequisition(2 , BigInteger.valueOf(400)));
+        listOfProductsToBeOrdered.add(new ProductToBeOrderedRequisition(3 , BigInteger.valueOf(100)));
+
+        PurchaseRequisitionRequest newPurchaseOrderRequest = new PurchaseRequisitionRequest(listOfProductsToBeOrdered);
+        PurchaseRequisitionForm purchaseRequisitionForm = newPurchaseOrderRequest.convertIntoPurchaseRequisitionForm();
+
+        Assertions.assertThrows(ProductNotFoundException.class, () -> createPurchaseRequisition.execute(purchaseRequisitionForm));
+
+    }
+
 }
