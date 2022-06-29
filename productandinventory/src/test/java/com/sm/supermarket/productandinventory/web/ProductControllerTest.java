@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sm.supermarket.SupermarketApplication;
+import com.sm.supermarket.productandinventory.builders.HttpRequestBuilder;
 import com.sm.supermarket.productandinventory.usecases.product.newproduct.CreatedProduct;
 import com.sm.supermarket.productandinventory.web.dto.NewProductRequest;
 import org.junit.jupiter.api.Assertions;
@@ -58,13 +59,9 @@ class ProductControllerTest {
         NewProductRequest newProductRequest = new NewProductRequest("Penne alla Vodka", 6L,
                 "Frozen meal, 286g, vegetarian and no added sugar." , new BigDecimal("15.00"), "UNIT");
 
-        uri = new URI(uriController);
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-                .post(uri)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper
-                        .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
-                        .writeValueAsString(newProductRequest));
+
+        MockHttpServletRequestBuilder request = new HttpRequestBuilder()
+                .getMockHttpServletRequestBuilder(new URI(uriController), objectMapper, newProductRequest);
 
         mockMvc.perform(request)
                 .andDo(MockMvcResultHandlers.print())
@@ -79,13 +76,8 @@ class ProductControllerTest {
          NewProductRequest newProductRequest = new NewProductRequest("Penne alla Vodka", 32L,
                  "Frozen meal, 286g, vegetarian and no added sugar." , new BigDecimal("15.00"), "UNIT");
 
-         uri = new URI(uriController);
-         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-                 .post(uri)
-                 .contentType(MediaType.APPLICATION_JSON)
-                 .content(objectMapper
-                         .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
-                         .writeValueAsString(newProductRequest));
+         MockHttpServletRequestBuilder request = new HttpRequestBuilder()
+                 .getMockHttpServletRequestBuilder(new URI(uriController), objectMapper, newProductRequest);
 
          mockMvc.perform(request)
                  .andDo(MockMvcResultHandlers.print())
@@ -100,13 +92,8 @@ class ProductControllerTest {
         NewProductRequest newProductRequest = new NewProductRequest(" ", 6L,
                 "Frozen meal, 286g, vegetarian and no added sugar." , new BigDecimal("15.00"), "UNIT");
 
-        uri = new URI(uriController);
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-                .post(uri)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper
-                        .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
-                        .writeValueAsString(newProductRequest));
+        MockHttpServletRequestBuilder request = new HttpRequestBuilder()
+                .getMockHttpServletRequestBuilder(new URI(uriController), objectMapper, newProductRequest);
 
         mockMvc.perform(request)
                 .andDo(MockMvcResultHandlers.print())
@@ -120,13 +107,8 @@ class ProductControllerTest {
         NewProductRequest newProductRequest = new NewProductRequest("Penne alla Vodka", 6L,
                 " " , new BigDecimal("15.00"), "UNIT");
 
-        uri = new URI(uriController);
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-                .post(uri)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper
-                        .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
-                        .writeValueAsString(newProductRequest));
+        MockHttpServletRequestBuilder request = new HttpRequestBuilder()
+                .getMockHttpServletRequestBuilder(new URI(uriController), objectMapper, newProductRequest);
 
         mockMvc.perform(request)
                 .andDo(MockMvcResultHandlers.print())
