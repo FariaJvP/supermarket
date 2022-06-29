@@ -49,9 +49,6 @@ class ProductControllerTest {
     @Value("${com.sm.supermarket.uri.newproduct}")
     private String uriController;
 
-    @Autowired
-    CreatedProduct createdProduct;
-
     @Test
     @DisplayName("should return status 201 when receives a valid request")
     public void test1() throws Exception {
@@ -180,41 +177,5 @@ class ProductControllerTest {
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(result -> Assertions.assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException)).andReturn();
-    }
-
-    @Test
-    @DisplayName("should throws a resolved exception if the user send an invalid name which causes a database constraint violation")
-    public void test9(){
-        NewProductRequest newProductRequest = new NewProductRequest(" ", 6L,
-                "Frozen meal, 286g, vegetarian and no added sugar." , new BigDecimal("15.00"), "UNIT");
-
-        Assertions.assertThrows(ConstraintViolationException.class, () -> createdProduct.execute(newProductRequest));
-    }
-
-    @Test
-    @DisplayName("should throws a resolved exception if the user send an invalid description which causes a database constraint violation")
-    public void test10(){
-        NewProductRequest newProductRequest = new NewProductRequest("Penne alla Vodka", 6L,
-                " " , new BigDecimal("15.00"), "UNIT");
-
-        Assertions.assertThrows(ConstraintViolationException.class, () -> createdProduct.execute(newProductRequest));
-    }
-
-    @Test
-    @DisplayName("should throws a resolved exception if the user send an invalid price value which causes a data integrity violation in database")
-    public void test11(){
-        NewProductRequest newProductRequest = new NewProductRequest("Penne alla Vodka", 6L,
-                "Frozen meal, 286g, vegetarian and no added sugar." , new BigDecimal("-15.00"), "UNIT");
-
-        Assertions.assertThrows(DataIntegrityViolationException.class, () -> createdProduct.execute(newProductRequest));
-    }
-
-    @Test
-    @DisplayName("should throws a resolved exception if the user send a request with a value that be the last negative boundary of price value causes a data integrity violation in database")
-    public void test12(){
-        NewProductRequest newProductRequest = new NewProductRequest("Penne alla Vodka", 6L,
-                "Frozen meal, 286g, vegetarian and no added sugar." , new BigDecimal("-0.01"), "UNIT");
-
-        Assertions.assertThrows(DataIntegrityViolationException.class, () -> createdProduct.execute(newProductRequest));
     }
 }
