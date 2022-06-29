@@ -13,7 +13,7 @@ public class ProductToBeOrdered {
     @EmbeddedId
     private CompositePurchaseRequisitionAndProduct id;
 
-    @Column(columnDefinition = "BIGINT UNSIGNED NOT NULL CHECK(quantity >= 0)")
+    @Column(columnDefinition = "BIGINT UNSIGNED NOT NULL CHECK(quantity > 0)")
     private BigInteger quantity;
 
     @Deprecated

@@ -4,8 +4,12 @@ import com.sm.supermarket.productandinventory.entities.product.EntityRepositoryF
 import com.sm.supermarket.productandinventory.entities.product.Product;
 import com.sm.supermarket.productandinventory.infrastructure.springdatarepositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.NestedExceptionUtils;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.stereotype.Component;
 
+import java.sql.SQLException;
 import java.util.Optional;
 
 @Component
@@ -16,7 +20,14 @@ public class ProductRepositoryUsingSpringData implements EntityRepositoryForProd
 
     @Override
     public void sendToDatabase(Product product) {
-        productRepository.save(product);
+        try{
+            productRepository.save(product);
+        }catch (JpaSystemException exception){
+            Throwable rootCause = NestedExceptionUtils.getRootCause(exception);
+            if (rootCause instanceof SQLException && rootCause.getMessage().startsWith("Check constraint")){
+                throw new DataIntegrityViolationException(rootCause.getMessage());
+            }
+        }
     }
 
     @Override
