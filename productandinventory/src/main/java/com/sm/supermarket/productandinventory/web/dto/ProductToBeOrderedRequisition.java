@@ -1,5 +1,7 @@
 package com.sm.supermarket.productandinventory.web.dto;
 
+import com.sm.supermarket.productandinventory.web.validation.ValidProduct;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.math.BigInteger;

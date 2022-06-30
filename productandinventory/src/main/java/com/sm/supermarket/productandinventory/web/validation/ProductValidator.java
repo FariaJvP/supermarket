@@ -1,6 +1,6 @@
-package com.sm.supermarket.productandinventory.web.dto;
+package com.sm.supermarket.productandinventory.web.validation;
 
-import com.sm.supermarket.productandinventory.entities.brand.Brand;
+import com.sm.supermarket.productandinventory.entities.product.Product;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -21,7 +21,7 @@ public class ProductValidator implements ConstraintValidator<ValidProduct, Long>
 
     @Override
     public boolean isValid(Long productId, ConstraintValidatorContext context) {
-        Brand brand = entityManager.find(Brand.class, productId);
-        return brand != null;
+        Product product = entityManager.find(Product.class, productId);
+        return product != null;
     }
 }

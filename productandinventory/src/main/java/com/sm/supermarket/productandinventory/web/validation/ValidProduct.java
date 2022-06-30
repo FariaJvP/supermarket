@@ -1,4 +1,4 @@
-package com.sm.supermarket.productandinventory.web.dto;
+package com.sm.supermarket.productandinventory.web.validation;
 
 
 import javax.validation.Constraint;
