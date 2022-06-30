@@ -1,15 +1,12 @@
 package com.sm.supermarket.productandinventory.web.dto;
 
-import com.sm.supermarket.productandinventory.entities.brand.Brand;
-import com.sm.supermarket.productandinventory.web.validation.ValidBrand;
-
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.math.BigInteger;
 
 public class ProductToBeOrderedRequisition {
 
-
+    @ValidProduct
     @NotNull public long productId;
 
     @Positive(message = "{product.quantity.positive}")

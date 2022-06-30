@@ -106,7 +106,7 @@ class NewPurchaseRequisitionControllerTest {
 
         mockMvc.perform(request)
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isNotFound())
-                .andExpect(result -> Assertions.assertTrue(result.getResolvedException() instanceof ProductNotFoundException)).andReturn();
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(result -> Assertions.assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException)).andReturn();
     }
 }
