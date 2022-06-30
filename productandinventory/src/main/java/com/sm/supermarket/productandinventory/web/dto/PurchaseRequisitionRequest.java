@@ -1,5 +1,6 @@
 package com.sm.supermarket.productandinventory.web.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sm.supermarket.productandinventory.usecases.inventory.purchaserequisition.PurchaseRequisitionForm;
 
 import javax.validation.Valid;
@@ -9,7 +10,7 @@ import java.util.Set;
 public class PurchaseRequisitionRequest {
 
     @Valid
-    private Set<ProductToBeOrderedRequisition> listOfProductsToBeOrdered;
+    @JsonProperty private Set<ProductToBeOrderedRequisition> listOfProductsToBeOrdered;
 
     private LocalDateTime dateTime;
 

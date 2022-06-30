@@ -12,23 +12,22 @@ import java.math.BigDecimal;
 
 public class NewProductRequest {
 
-    @NotBlank(message = "name must not be blank")
-    @Size(max = 100)
+    @NotBlank(message = "{product.name.notblank}")
+    @Size(max = 100, message = "{product.name.maxsize}")
     private String name;
 
-    @NotNull(message = "brand id must not be null")
     @ValidBrand(fieldName = "id", domainClass = Brand.class)
-    private Long brandId;
+    @NotNull private Long brandId;
 
-    @NotBlank(message = "description must not be blank")
-    @Size(max = 200)
+    @NotBlank(message = "{product.description.notblank}")
+    @Size(max = 200, message = "{product.description.maxsize}")
     private String description;
 
-    @NotNull(message = "price must not be null")
-    @PositiveOrZero(message = "price can not be negative")
+    @NotNull(message = "{product.price.notnull}")
+    @PositiveOrZero(message = "{product.price.positive}")
     private BigDecimal price;
 
-    @NotBlank(message = "unit must not be blank")
+    @NotBlank(message = "{packageunit.notblank}")
     @ValidPackageUnit
     private String unit;
 

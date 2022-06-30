@@ -42,7 +42,7 @@ public class CreatePurchaseRequisition {
     public void execute(PurchaseRequisitionForm requisition) {
         getPurchaseRequisitionForm(requisition);
         generateNewPurchaseRequisition();
-        fillTheListOfProductsToBeOrderedWithWhatCameInRequisition(requisition);
+        fillTheListOfProductsToBeOrderedWithWhatCameInRequisition();
         transactPurchaseRequisitionWithHistory();
     }
 
@@ -50,8 +50,8 @@ public class CreatePurchaseRequisition {
         this.purchaseRequisitionForm = requisition;
     }
 
-    private void fillTheListOfProductsToBeOrderedWithWhatCameInRequisition(PurchaseRequisitionForm requisition) {
-        requisition.getListOfProductsToBeOrdered().forEach(productInList ->{
+    private void fillTheListOfProductsToBeOrderedWithWhatCameInRequisition() {
+        purchaseRequisitionForm.getListOfProductsToBeOrdered().forEach(productInList ->{
             Product product = productRepository.findById(productInList.getProductId());
             listOfProductsToBeOrdered.add(new ProductToBeOrdered(new CompositePurchaseRequisitionAndProduct(purchaseRequisition, product), productInList.getQuantity()));
         });

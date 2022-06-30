@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidBrand {
 
-    String message() default "{brand.messagefor.notfound}";
+    String message() default "{brand.notfound}";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 

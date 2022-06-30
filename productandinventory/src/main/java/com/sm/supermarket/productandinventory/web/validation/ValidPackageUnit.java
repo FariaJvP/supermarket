@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidPackageUnit {
 
-    String message() default "{packageunit.messagefor.notvalid}";
+    String message() default "{packageunit.notvalid}";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 

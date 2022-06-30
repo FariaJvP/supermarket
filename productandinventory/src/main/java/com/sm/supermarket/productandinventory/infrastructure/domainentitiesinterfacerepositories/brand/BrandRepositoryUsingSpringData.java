@@ -18,7 +18,7 @@ public class BrandRepositoryUsingSpringData implements EntityRepositoryForBrand 
     public Brand findBrandById(Long brandId) {
         Optional<Brand> brand = brandRepository.findById(brandId);
         if(!brand.isPresent()){
-            throw new BrandNotFoundException("could not find a valid Brand in database with the id: id " + brandId);
+            throw new BrandNotFoundException("${brand.messagefor.notfound.database} " + brandId);
         }else {
             return brand.get();
         }

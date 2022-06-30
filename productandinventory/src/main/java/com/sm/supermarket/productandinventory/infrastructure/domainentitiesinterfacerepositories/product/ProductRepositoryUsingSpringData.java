@@ -4,6 +4,8 @@ import com.sm.supermarket.productandinventory.entities.product.EntityRepositoryF
 import com.sm.supermarket.productandinventory.entities.product.Product;
 import com.sm.supermarket.productandinventory.infrastructure.springdatarepositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.NestedExceptionUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.orm.jpa.JpaSystemException;
@@ -13,10 +15,18 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 @Component
+@PropertySource("classpath:messages.properties")
 public class ProductRepositoryUsingSpringData implements EntityRepositoryForProduct {
 
+    private final ProductRepository productRepository;
+
+    private final String errorMessage;
+
     @Autowired
-    public ProductRepository productRepository;
+    public ProductRepositoryUsingSpringData(ProductRepository productRepository, @Value("${product.notfound.database}") String productMessageNotFoundDatabase) {
+        this.productRepository = productRepository;
+        this.errorMessage = productMessageNotFoundDatabase;
+    }
 
     @Override
     public void sendToDatabase(Product product) {
@@ -34,7 +44,7 @@ public class ProductRepositoryUsingSpringData implements EntityRepositoryForProd
     public Product findById(long productId) {
         Optional<Product> productSearch = productRepository.findById(productId);
         if (!productSearch.isPresent()){
-            throw new ProductNotFoundException("could not find a valid Brand in database with the id: id"  + productId);
+            throw new ProductNotFoundException(errorMessage + productId);
         }else {
             return productSearch.get();
         }
