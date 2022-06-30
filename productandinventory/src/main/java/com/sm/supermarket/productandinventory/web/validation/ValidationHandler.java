@@ -1,6 +1,7 @@
 package com.sm.supermarket.productandinventory.web.validation;
 
 import com.sm.supermarket.productandinventory.infrastructure.domainentitiesinterfacerepositories.brand.BrandNotFoundException;
+import com.sm.supermarket.productandinventory.infrastructure.domainentitiesinterfacerepositories.product.ProductNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,14 @@ public class ValidationHandler {
     public ResponseEntity<ResponseToWrongDataSentInForm> handlerForBrandNotFound(BrandNotFoundException exception){
         ResponseToWrongDataSentInForm response = new ResponseToWrongDataSentInForm(Instant.now(),
                 HttpStatus.NOT_FOUND.value(), "brand not found", exception.getMessage());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ResponseToWrongDataSentInForm> handlerForProductNotFound(ProductNotFoundException exception){
+        ResponseToWrongDataSentInForm response = new ResponseToWrongDataSentInForm(Instant.now(),
+                HttpStatus.NOT_FOUND.value(), "product not found", exception.getMessage());
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }

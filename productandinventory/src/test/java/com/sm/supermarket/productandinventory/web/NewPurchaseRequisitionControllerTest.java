@@ -5,6 +5,7 @@ import com.sm.supermarket.SupermarketApplication;
 import com.sm.supermarket.productandinventory.builders.HttpRequestBuilder;
 import com.sm.supermarket.productandinventory.builders.PurchaseRequisitionDataBuilder;
 import com.sm.supermarket.productandinventory.entities.inventory.purchaserequisition.ProductToBeOrdered;
+import com.sm.supermarket.productandinventory.infrastructure.domainentitiesinterfacerepositories.product.ProductNotFoundException;
 import com.sm.supermarket.productandinventory.web.dto.PurchaseRequisitionRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -90,5 +91,22 @@ class NewPurchaseRequisitionControllerTest {
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(result -> Assertions.assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException)).andReturn();
+    }
+
+    @Test
+    @DisplayName("should return a resolved exception when the client sends an invalid id for product")
+    public void test3() throws Exception {
+
+        PurchaseRequisitionRequest newPurchaseOrderRequest = new PurchaseRequisitionDataBuilder()
+                .withProductToBeOrdered(150, BigInteger.valueOf(300))
+                .buildPurchaseRequisitionRequest();
+
+        MockHttpServletRequestBuilder request = new HttpRequestBuilder()
+                .getMockHttpServletRequestBuilder(new URI(uriController), objectMapper, newPurchaseOrderRequest);
+
+        mockMvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(result -> Assertions.assertTrue(result.getResolvedException() instanceof ProductNotFoundException)).andReturn();
     }
 }
