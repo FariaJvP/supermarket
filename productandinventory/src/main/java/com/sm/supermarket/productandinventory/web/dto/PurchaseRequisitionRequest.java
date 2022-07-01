@@ -4,13 +4,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sm.supermarket.productandinventory.usecases.inventory.purchaserequisition.PurchaseRequisitionForm;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Set;
 
 public class PurchaseRequisitionRequest {
 
-    @Valid
-    @JsonProperty private Set<ProductToBeOrderedRequisition> listOfProductsToBeOrdered;
+    @NotNull(message = "{purchaserequisition.notnull.list}")
+    @NotEmpty(message = "{purchaserequisition.notempty.list}")
+    @JsonProperty @Valid
+    private Set<ProductToBeOrderedRequisition> listOfProductsToBeOrdered;
 
     private LocalDateTime dateTime;
 
