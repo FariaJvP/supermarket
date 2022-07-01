@@ -40,4 +40,8 @@ public class ProductToBeOrderedRequisition {
     public String getReferenceUnit() {
         return this.unit;
     }
+
+    public void convertWeighttoGranular(BigInteger convertedWeight) {
+        this.quantity = convertedWeight;
+    }
 }
