@@ -37,6 +37,14 @@ public class ValidationHandler {
     }
 
     @ExceptionHandler
+    public ResponseEntity<ResponseToWrongDataSentInForm> handlerForIllegalState(IllegalStateException exception){
+        ResponseToWrongDataSentInForm response = new ResponseToWrongDataSentInForm(Instant.now(),
+                HttpStatus.BAD_REQUEST.value(), "illegal state", exception.getMessage());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler
     public ResponseEntity<ResponseToWrongDataSentInForm> handlerForCheckConstraintViolationThrewByDatabase(SQLException exception){
         ResponseToWrongDataSentInForm response = new ResponseToWrongDataSentInForm(Instant.now(),
                 HttpStatus.BAD_REQUEST.value(), "database check constraint violation", exception.getMessage());
