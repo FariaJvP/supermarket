@@ -28,26 +28,36 @@ public class CreatePurchaseRequisition {
 
     private PurchaseRequisitionForm purchaseRequisitionForm;
 
+    private final WeightConverter weightConverter;
+
     @Autowired
     public CreatePurchaseRequisition(EntityRepositoryForProduct productRepository, EntityRepositoryForPurchaseRequisition purchaseRequisitionRepository,
                                      EntityRepositoryForProductsToBeOrdered productsToBeOrderedRepository,
-                                     GeneratePurchaseRequisitionHistory generatePurchaseRequisitionHistory){
+                                     GeneratePurchaseRequisitionHistory generatePurchaseRequisitionHistory, WeightConverter weightConverter){
         this.productRepository = productRepository;
         this.purchaseRequisitionRepository = purchaseRequisitionRepository;
         this.productsToBeOrderedRepository = productsToBeOrderedRepository;
         this.generatePurchaseRequisitionHistory = generatePurchaseRequisitionHistory;
         this.listOfProductsToBeOrdered = new HashSet<>();
+        this.weightConverter = new WeightConverter();
     }
 
     public void execute(PurchaseRequisitionForm requisition) {
         getPurchaseRequisitionForm(requisition);
         generateNewPurchaseRequisition();
+        convertWeightOfProductToGranular();
         fillTheListOfProductsToBeOrderedWithWhatCameInRequisition();
         transactPurchaseRequisitionWithHistory();
     }
 
     private void getPurchaseRequisitionForm(PurchaseRequisitionForm requisition) {
         this.purchaseRequisitionForm = requisition;
+    }
+
+    private void convertWeightOfProductToGranular() {
+        purchaseRequisitionForm.getListOfProductsToBeOrdered().forEach(product -> {
+            product.convertWeighttoGranular(weightConverter.convert(product)) ;
+        });
     }
 
     private void fillTheListOfProductsToBeOrderedWithWhatCameInRequisition() {
