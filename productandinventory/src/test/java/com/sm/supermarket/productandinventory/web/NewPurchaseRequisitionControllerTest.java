@@ -55,9 +55,9 @@ class NewPurchaseRequisitionControllerTest {
     public void test1() throws Exception {
 
         PurchaseRequisitionRequest newPurchaseOrderRequest = new PurchaseRequisitionDataBuilder()
-                    .withProductToBeOrdered(1, BigInteger.valueOf(1000000))
-                    .withProductToBeOrdered(2, BigInteger.valueOf(400))
-                    .withProductToBeOrdered(3, BigInteger.valueOf(100))
+                    .withProductToBeOrdered(1, "KG", BigInteger.valueOf(1000000))
+                    .withProductToBeOrdered(2, "UNIT" , BigInteger.valueOf(400))
+                    .withProductToBeOrdered(3, "UNIT", BigInteger.valueOf(100))
                 .buildPurchaseRequisitionRequest();
 
         MockHttpServletRequestBuilder request = new HttpRequestBuilder()
@@ -79,9 +79,9 @@ class NewPurchaseRequisitionControllerTest {
     public void test2() throws Exception {
 
         PurchaseRequisitionRequest newPurchaseOrderRequest = new PurchaseRequisitionDataBuilder()
-                    .withProductToBeOrdered(1, BigInteger.valueOf(-1000000))
-                    .withProductToBeOrdered(2, BigInteger.valueOf(400))
-                    .withProductToBeOrdered(3, BigInteger.valueOf(100))
+                    .withProductToBeOrdered(1, "KG" , BigInteger.valueOf(-1000000))
+                    .withProductToBeOrdered(2, "UNIT", BigInteger.valueOf(400))
+                    .withProductToBeOrdered(3, "UNIT", BigInteger.valueOf(100))
                 .buildPurchaseRequisitionRequest();
 
         MockHttpServletRequestBuilder request = new HttpRequestBuilder()
@@ -98,7 +98,7 @@ class NewPurchaseRequisitionControllerTest {
     public void test3() throws Exception {
 
         PurchaseRequisitionRequest newPurchaseOrderRequest = new PurchaseRequisitionDataBuilder()
-                .withProductToBeOrdered(150, BigInteger.valueOf(300))
+                .withProductToBeOrdered(150, "UNIT", BigInteger.valueOf(300))
                 .buildPurchaseRequisitionRequest();
 
         MockHttpServletRequestBuilder request = new HttpRequestBuilder()

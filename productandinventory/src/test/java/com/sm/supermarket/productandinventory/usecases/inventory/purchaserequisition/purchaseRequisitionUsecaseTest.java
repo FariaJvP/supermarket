@@ -30,9 +30,9 @@ public class purchaseRequisitionUsecaseTest {
     public void test3() {
 
         PurchaseRequisitionForm purchaseRequisitionForm = new PurchaseRequisitionDataBuilder()
-                .withProductToBeOrdered(1, BigInteger.valueOf(-1000000))
-                .withProductToBeOrdered(2, BigInteger.valueOf(400))
-                .withProductToBeOrdered(3, BigInteger.valueOf(100))
+                .withProductToBeOrdered(1, "KG", BigInteger.valueOf(-1000000))
+                .withProductToBeOrdered(2,"UNIT", BigInteger.valueOf(400))
+                .withProductToBeOrdered(3, "UNIT" ,BigInteger.valueOf(100))
                 .buildPurchaseRequisitionForm();
 
         Assertions.assertThrows(DataIntegrityViolationException.class, () -> createPurchaseRequisition.execute(purchaseRequisitionForm));
@@ -43,9 +43,9 @@ public class purchaseRequisitionUsecaseTest {
     public void test4() {
 
         PurchaseRequisitionForm purchaseRequisitionForm = new PurchaseRequisitionDataBuilder()
-                .withProductToBeOrdered(1, BigInteger.valueOf(0))
-                .withProductToBeOrdered(2, BigInteger.valueOf(400))
-                .withProductToBeOrdered(3, BigInteger.valueOf(100))
+                .withProductToBeOrdered(1,"UNIT", BigInteger.valueOf(0))
+                .withProductToBeOrdered(2, "UNIT", BigInteger.valueOf(400))
+                .withProductToBeOrdered(3, "UNIT" , BigInteger.valueOf(100))
                 .buildPurchaseRequisitionForm();
 
         Assertions.assertThrows(DataIntegrityViolationException.class, () -> createPurchaseRequisition.execute(purchaseRequisitionForm));
@@ -56,9 +56,9 @@ public class purchaseRequisitionUsecaseTest {
     public void test5() {
 
         PurchaseRequisitionForm purchaseRequisitionForm = new PurchaseRequisitionDataBuilder()
-                .withProductToBeOrdered(55, BigInteger.valueOf(1000000))
-                .withProductToBeOrdered(2, BigInteger.valueOf(400))
-                .withProductToBeOrdered(3, BigInteger.valueOf(100))
+                .withProductToBeOrdered(55, "UNIT", BigInteger.valueOf(1000000))
+                .withProductToBeOrdered(2, "UNIT" , BigInteger.valueOf(400))
+                .withProductToBeOrdered(3, "UNIT" , BigInteger.valueOf(100))
                 .buildPurchaseRequisitionForm();
 
         Assertions.assertThrows(ProductNotFoundException.class, () -> createPurchaseRequisition.execute(purchaseRequisitionForm));

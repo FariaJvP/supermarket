@@ -12,8 +12,8 @@ public class PurchaseRequisitionDataBuilder {
 
     private final Set<ProductToBeOrderedRequisition> listOfProductsToBeOrdered = new HashSet<>();
 
-    public PurchaseRequisitionDataBuilder withProductToBeOrdered(long id, BigInteger quantity){
-        this.listOfProductsToBeOrdered.add(new ProductToBeOrderedRequisition(id,quantity));
+    public PurchaseRequisitionDataBuilder withProductToBeOrdered(long id, String unit, BigInteger quantity){
+        this.listOfProductsToBeOrdered.add(new ProductToBeOrderedRequisition(id,unit,quantity));
         return this;
     }
 
