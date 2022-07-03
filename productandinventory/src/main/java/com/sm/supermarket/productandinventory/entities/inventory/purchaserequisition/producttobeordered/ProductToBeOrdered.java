@@ -1,4 +1,4 @@
-package com.sm.supermarket.productandinventory.entities.inventory.purchaserequisition;
+package com.sm.supermarket.productandinventory.entities.inventory.purchaserequisition.producttobeordered;
 
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;

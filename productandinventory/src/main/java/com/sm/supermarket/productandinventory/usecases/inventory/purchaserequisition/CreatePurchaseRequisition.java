@@ -1,8 +1,11 @@
 package com.sm.supermarket.productandinventory.usecases.inventory.purchaserequisition;
 
-import com.sm.supermarket.productandinventory.entities.inventory.purchaserequisition.*;
 import com.sm.supermarket.productandinventory.entities.inventory.purchaserequisition.history.PurchaseRequisitionHistory;
 import com.sm.supermarket.productandinventory.entities.inventory.purchaserequisition.history.PurchaseRequisitionHistoryStatusUpdate;
+import com.sm.supermarket.productandinventory.entities.inventory.purchaserequisition.*;
+import com.sm.supermarket.productandinventory.entities.inventory.purchaserequisition.producttobeordered.CompositePurchaseRequisitionAndProduct;
+import com.sm.supermarket.productandinventory.entities.inventory.purchaserequisition.producttobeordered.EntityRepositoryForProductsToBeOrdered;
+import com.sm.supermarket.productandinventory.entities.inventory.purchaserequisition.producttobeordered.ProductToBeOrdered;
 import com.sm.supermarket.productandinventory.entities.product.EntityRepositoryForProduct;
 import com.sm.supermarket.productandinventory.entities.product.Product;
 import org.springframework.beans.factory.annotation.Autowired;

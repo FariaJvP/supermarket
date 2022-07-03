@@ -1,7 +1,7 @@
 package com.sm.supermarket.productandinventory.infrastructure.domainentitiesinterfacerepositories.purchaserequisition;
 
-import com.sm.supermarket.productandinventory.entities.inventory.purchaserequisition.EntityRepositoryForProductsToBeOrdered;
-import com.sm.supermarket.productandinventory.entities.inventory.purchaserequisition.ProductToBeOrdered;
+import com.sm.supermarket.productandinventory.entities.inventory.purchaserequisition.producttobeordered.EntityRepositoryForProductsToBeOrdered;
+import com.sm.supermarket.productandinventory.entities.inventory.purchaserequisition.producttobeordered.ProductToBeOrdered;
 import com.sm.supermarket.productandinventory.infrastructure.springdatarepositories.ProductToBeOrderedRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.NestedExceptionUtils;

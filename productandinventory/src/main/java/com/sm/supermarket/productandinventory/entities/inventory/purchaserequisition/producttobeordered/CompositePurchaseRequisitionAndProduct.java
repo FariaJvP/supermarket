@@ -1,5 +1,6 @@
-package com.sm.supermarket.productandinventory.entities.inventory.purchaserequisition;
+package com.sm.supermarket.productandinventory.entities.inventory.purchaserequisition.producttobeordered;
 
+import com.sm.supermarket.productandinventory.entities.inventory.purchaserequisition.PurchaseRequisition;
 import com.sm.supermarket.productandinventory.entities.product.Product;
 
 import javax.persistence.Embeddable;
